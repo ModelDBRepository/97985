@@ -1,0 +1,47 @@
+objref trajectories
+trajectories = new List()
+
+proc add_trajec() {local ix  localobj vv, tvec, name, tstr
+	ix = -2
+	if (numarg() == 2) {
+		if (section_exists($s1, $2)) {
+			ix = $2
+		}
+	} else if (section_exists($s1)) {
+		ix = -1
+	}
+	if (ix != -2) {
+		name = new String($s1)
+		if (ix >= 0) {
+			sprint(name.s, "%s[%d]", $s1, ix)
+		}else{
+			name.s = $s1
+			ix = 0
+		}
+		push_section(name.s)
+		tvec = new Vector()
+		tvec.record(&t)
+		vv = new Vector()
+		vv.record(&v(.5))
+		pop_section()
+		sprint(name.s, "trajec_%s_%d.dat", $s1, ix)
+		trajectories.append(name)
+		trajectories.append(tvec)
+		trajectories.append(vv)
+	}
+}
+
+proc print_trajec() {local i, j  localobj f, name, tvec, vvec
+	for i=0, trajectories.count - 1 {
+		name = trajectories.object(i)
+		tvec = trajectories.object(i += 1)
+		vvec = trajectories.object(i += 1)
+		f = new File()
+		f.wopen(name.s)
+		for j=0, tvec.size-1 {
+			f.printf("%g %g\n", tvec.x[j], vvec.x[j])
+		}
+		f.close()
+	}
+}
+

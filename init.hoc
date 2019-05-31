@@ -1,0 +1,71 @@
+{setuptime = startsw()}
+
+// normal run on 1 processor does not split
+// use -c split=1 to split if one processor
+// use -c split=n to stop after setup showing how the cell is split
+//   probably also want -c maxfactor = .3/n in that case
+if (!name_declared("split")) { execute("split = 0") }
+if (!name_declared("model")) { execute("model = 2") }
+
+{load_file("nrngui.hoc")}
+{load_file("netparmpi.hoc")}
+{load_file("trajec.hoc")}
+objref pc, pnm
+pnm = new ParallelNetManager(1)
+pc = pnm.pc
+{load_file("multisplit.hoc")}
+{load_file("perf.hoc")}
+
+chk_mcomplex()
+
+proc poirazi() {
+	load_file("modeldb/CA1_multi/experiment/spike-train-attenuation/bpap.hoc")
+	multisplit()
+	add_trajec("soma", 0)
+	add_trajec("apical_dendrite", 46)
+	add_trajec("apical_dendrite", 71)
+}
+proc lazar() {
+	load_file("modeldb/ca3_2002/ca3_paper.hoc")
+	multisplit()
+	add_trajec("soma")
+	cvode_active(0)
+}
+proc miyasho() {
+	load_file("modeldb/prknj/purkinje.hoc")
+	tstop = 500
+	multisplit()
+	add_trajec("soma")
+	add_trajec("SpinyDendrite", 0)
+}
+
+
+if (model == 1) poirazi()
+if (model == 2) lazar()
+if (model == 3) miyasho()
+
+if (split > 1) {
+	load_file("pltsplit.hoc")
+	execerror("stop", "")
+}
+
+{pc.multisplit()}
+{pc.set_maxstep(100)}
+setuptime = startsw() - setuptime
+if (pc.id == 0) {printf("setuptime = %g\n", setuptime)}
+
+proc dorun() {
+	runtime = startsw()
+	statrun(tstop)
+	runtime = startsw() - runtime
+	if (pc.id == 0) {printf("runtime = %g\n", runtime)}
+	print_trajec()
+	printf("%5d time %10g %10g %10g %5g\n", pc.id, pc.step_time(), pc.vtransfer_time(1), pc.vtransfer_time(2), cplx)
+	pc.runworker()
+	getstat()
+	pc.done()
+	perf2file()
+	quit()
+}
+
+dorun()
