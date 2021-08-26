@@ -5,7 +5,7 @@
 #download models
 models="20212 20007 17664"
 for i in $models ; do
-	curl "http://senselab.med.yale.edu/ModelDB/eavBinDown.cshtml?o=$i&a=23&mime=application/zip"> modeldb/$i.zip
+	curl "https://senselab.med.yale.edu/ModelDB/eavBinDown.cshtml?o=$i&a=23&mime=application/zip"> modeldb/$i.zip
 	(cd modeldb; unzip -o $i.zip)
 done
 tf=$$
