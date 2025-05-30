@@ -20,9 +20,8 @@ automatically running a simulation.
 
 20150714 Fabrizio Gabbiani contributed a fix for updated name for
 eavBinDown in modelfix.sh.
+
 20210826 The http in in modelfix.sh was updated to https (needs this
 to work) Tom Morse
 
----
-
-2025-05-30: Standardized to Markdown
+20250530 Standardized to Markdown
