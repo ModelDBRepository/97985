@@ -1,20 +1,27 @@
-Hines M.L., Markram H., Schuermann F. (2008)
+# Hines M.L., Markram H., Schuermann F. (2008)
 Fully Implicit Parallel Simulation of Single Neurons
-J. Comp. Neurosci. DOI: 10.1007/s10827-008-0087-5
+*J. Comp. Neurosci.* DOI: 10.1007/s10827-008-0087-5
 
 This contains the administrative files needed to simulate any
 single neuron model in ModelDB.
 
+```bash
 mkdir modeldb
+```
 
-"sh modelfix.sh" downloads the three single neuron models used in
+`sh modelfix.sh` downloads the three single neuron models used in
 the paper, extracts them into subdirectories of modeldb and
 trivially modifies some files so the models can be launched without
 automatically running a simulation.
 
-"sh perfrun.sh" generates the data for figure 5.
+`sh perfrun.sh` generates the data for figure 5.
+
+---
 
 20150714 Fabrizio Gabbiani contributed a fix for updated name for
 eavBinDown in modelfix.sh.
+
 20210826 The http in in modelfix.sh was updated to https (needs this
 to work) Tom Morse
+
+20250530 Standardized to Markdown
